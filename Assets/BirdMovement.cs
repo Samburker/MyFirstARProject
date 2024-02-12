@@ -1,31 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BirdMovement : MonoBehaviour
 {
-    [SerializeField] private float speed;
+    public float moveSpeed = 5f; // Adjust the speed as needed
+    public float turnSpeed = 100f; // Adjust the turn speed as needed
+    public float maxPitchAngle = 45f; // Maximum angle for pitching (looking up or down)
 
-    private FixedJoystick fixedJoystick;
-    private Rigidbody rigidBody;
+    private JoysticScript joystick;
 
-    private void OnEnable()
+    void Start()
     {
-        fixedJoystick = GetComponent<FixedJoystick>();
-        rigidBody = gameObject.GetComponent<Rigidbody>();
+        // Find the Joystick script attached to the joystick handle
+        joystick = FindObjectOfType<JoysticScript>();
     }
 
-    private void FixedUpdate()
+    void Update()
     {
-        float xVal = fixedJoystick.Horizontal;
-        float yVal = fixedJoystick.Vertical;
+        // Get input direction from the joystick
+        Vector2 inputDirection = joystick.GetInputDirection();
 
-        Vector3 movement = new Vector3 (xVal, 0, yVal);
-        rigidBody.velocity = movement * speed;
+        // Calculate horizontal movement based on input direction
+        float horizontalMovement = inputDirection.x * turnSpeed * Time.deltaTime;
+        transform.Rotate(Vector3.up, horizontalMovement);
 
-        if(xVal != 0 && yVal != 0)
-        {
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, Mathf.Atan2(xVal, yVal)*Mathf.Rad2Deg,transform.eulerAngles.z);
-        }
+        // Calculate vertical movement based on input direction
+        float verticalMovement = inputDirection.y * moveSpeed * Time.deltaTime;
+        transform.Translate(Vector3.forward * verticalMovement, Space.Self);
+
+        // Limit pitch angle
+        float currentPitch = transform.rotation.eulerAngles.x;
+        float clampedPitch = Mathf.Clamp(currentPitch, -maxPitchAngle, maxPitchAngle);
+        transform.rotation = Quaternion.Euler(clampedPitch, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
     }
 }

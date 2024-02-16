@@ -1,24 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using TMPro;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 public class touchInput : MonoBehaviour
 {
-    [SerializeField] private TMP_Text debugtext; // debug text object
+    [SerializeField] private TMP_Text debugText;
+    [SerializeField] private GameObject ballPrefab;
+    private ARRaycastManager arrcm;
 
-    //singletap function needs to be an Unity event
-    // for the CallbackContext to work
+    private List<ARRaycastHit> hits = new List<ARRaycastHit>();
+
+    TrackableType trackableTypes = TrackableType.PlaneWithinPolygon;
+
+    private void Start()
+    {
+        arrcm = GetComponent<ARRaycastManager>();
+    }
 
     public void SingleTap(InputAction.CallbackContext ctx)
     {
-        //Check that input was completed
-        if(ctx.phase == InputActionPhase.Performed)
+        if (ctx.phase == InputActionPhase.Performed)
         {
-            var touchPos = ctx.ReadValue<Vector2>(); // read position
-            debugtext.text  = touchPos.ToString(); // Write to debug field
+            var touchPos = ctx.ReadValue<Vector2>();
+            debugText.text = touchPos.ToString();
+
+            if (arrcm.Raycast(touchPos, hits, trackableTypes))
+            {
+                var ball = Instantiate(ballPrefab, hits[0].pose.position, new Quaternion());
+            }
+
         }
     }
+
 
 }

@@ -13,6 +13,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "DoubleTap",
+                    "type": "Button",
+                    "id": "01dfb406-40c4-441c-ab9b-1827e5184217",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "MultiTap",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -48,6 +57,17 @@
                     "action": "SingleTap",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "c99f2a22-b0a2-4798-98f8-a207c29efccb",
+                    "path": "<Touchscreen>/primaryTouch/tap",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoubleTap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

@@ -47,7 +47,6 @@ public class CookieSpawner : MonoBehaviour
                     AttachCookieToFace(trackedFace, cookieAttachVertexIndex);
                     mouthOpen = true;
                     // Increment cookie counter when a cookie is spawned
-                    cookieGameManager.IncrementCookieCounter();
                 }
             }
             else
@@ -56,6 +55,8 @@ public class CookieSpawner : MonoBehaviour
                 if (mouthOpen)
                 {
                     DestroyCookie();
+                    cookieGameManager.IncrementCookieCounter();
+
                     mouthOpen = false;
                 }
             }
